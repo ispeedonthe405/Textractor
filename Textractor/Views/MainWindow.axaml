@@ -1,0 +1,110 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Textractor.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:sym="using:sbavalonia.symbols"
+		x:Class="Textractor.Views.MainWindow"
+        x:DataType="vm:VM_MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Textractor"
+		ExtendClientAreaChromeHints="PreferSystemChrome"
+		ExtendClientAreaToDecorationsHint="True"
+		ShowInTaskbar="True"
+		Background="Transparent">
+
+    <Design.DataContext>
+        <vm:VM_MainWindow/>
+    </Design.DataContext>
+
+	<Window.Styles>
+		<Style Selector="Button">
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="CornerRadius" Value="45"/>
+		</Style>
+		<Style Selector="TextBlock">
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+		<Style Selector="TextBox">
+			<Setter Property="VerticalAlignment" Value="Center"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid>
+
+		<Grid.RowDefinitions>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="5"/>
+			<RowDefinition Height="40"/>
+			<RowDefinition Height="5"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="20"/>
+		</Grid.RowDefinitions>
+
+		<Border Grid.Row="0" Grid.RowSpan="7" CornerRadius="20,20,20,20" IsHitTestVisible="False"
+				Background="{DynamicResource SystemChromeHighColor}"
+				BorderBrush="DarkGray"
+				BorderThickness="1">
+			
+		</Border>
+
+		<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,0,0,0">
+			<sym:Symbol SymbolName="image"/>
+			<TextBlock FontSize="14" FontWeight="Bold" Text="Textractor"/>
+		</StackPanel>
+		
+		<StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch" Margin="10,0,10,0">
+			<TextBlock Text="File:"/>
+			<TextBox Width="500" Text="{Binding SelectedFile}" IsReadOnly="True"/>
+			<Button Command="{Binding OpenFileCommand}">
+				<Button.Content>
+					<StackPanel Orientation="Horizontal">
+						<sym:Symbol SymbolName="file_open" Width="24" Height="24" VerticalAlignment="Center"/>
+						<TextBlock Text="Open" Margin="5,0,0,0" VerticalAlignment="Center"/>
+					</StackPanel>
+				</Button.Content>
+			</Button>
+		</StackPanel>
+
+		<StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10" Margin="10,0,10,0">
+			<Button Command="{Binding Process_FullCommand}">
+				<Button.Content>
+					<StackPanel Orientation="Horizontal">
+						<sym:Symbol SymbolName="scan" Width="24" Height="24" VerticalAlignment="Center"/>
+						<TextBlock Text="Process: Full analysis" Margin="5,0,0,0" VerticalAlignment="Center"/>
+					</StackPanel>
+				</Button.Content>
+			</Button>
+			<Button Command="{Binding Process_TextCommand}">
+				<Button.Content>
+					<StackPanel Orientation="Horizontal">
+						<sym:Symbol SymbolName="scan" Width="24" Height="24" VerticalAlignment="Center"/>
+						<TextBlock Text="Process: Text only" Margin="5,0,0,0" VerticalAlignment="Center"/>
+					</StackPanel>
+				</Button.Content>
+			</Button>
+		</StackPanel>
+
+		<TabControl Grid.Row="5" TabIndex="{Binding TabIndex, Mode=TwoWay}">
+
+			<TabItem Header="OCR Result">
+				<Border Background="White">
+					<TextBox IsReadOnly="True" AcceptsReturn="True" BorderThickness="0" VerticalAlignment="Stretch" Text="{Binding OcrResult}"/>
+				</Border>
+			</TabItem>
+
+			<TabItem Header="Image Source">
+				<Border Background="White">
+					<Image Source="{Binding SelectedImage}"/>
+				</Border>
+			</TabItem>
+
+		</TabControl>
+
+
+	</Grid>
+
+</Window>
