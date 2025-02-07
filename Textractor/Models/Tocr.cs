@@ -10,7 +10,7 @@ namespace Textractor.Models
         //static string DataPath = @"D:\code\tessdata_best";
         static string DataPath = @".\tessdata";
 
-        public static string Process(string fullPath)
+        public static string Process_Full(string fullPath)
         {
             using var engine = new Engine(DataPath, Language.English, EngineMode.Default);
             using var img = TesseractOCR.Pix.Image.LoadFromFile(fullPath);

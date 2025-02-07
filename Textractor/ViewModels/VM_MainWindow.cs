@@ -77,7 +77,7 @@ namespace Textractor.ViewModels
         [RelayCommand(CanExecute = nameof(CanEx_Process_Full))]
         private void Process_Full()
         {
-            OcrResult = Tocr.Process(SelectedFile);
+            OcrResult = Tocr.Process_Full(SelectedFile);
         }
 
         private bool CanEx_Process_Full()
