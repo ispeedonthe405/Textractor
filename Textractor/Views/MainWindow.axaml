@@ -44,21 +44,21 @@
 			<RowDefinition Height="20"/>
 		</Grid.RowDefinitions>
 
-		<Border Grid.Row="0" Grid.RowSpan="7" CornerRadius="20,20,20,20" IsHitTestVisible="False"
+		<Border Grid.Row="0" Grid.RowSpan="7" CornerRadius="20,20,10,10" IsHitTestVisible="False"
 				Background="{DynamicResource SystemChromeHighColor}"
 				BorderBrush="DarkGray"
-				BorderThickness="1">
+				BorderThickness="3">
 			
 		</Border>
 
-		<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,0,0,0">
+		<StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="10,0,0,0">
 			<sym:Symbol SymbolName="image"/>
-			<TextBlock FontSize="14" FontWeight="Bold" Text="Textractor"/>
+			<TextBlock FontSize="16" FontWeight="Bold" Text="Textractor"/>
 		</StackPanel>
 		
 		<StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch" Margin="10,0,10,0">
 			<TextBlock Text="File:"/>
-			<TextBox Width="500" Text="{Binding SelectedFile}" IsReadOnly="True"/>
+			<TextBox Width="500" MinHeight="24" Height="28" Text="{Binding SelectedFile}" IsReadOnly="True"/>
 			<Button Command="{Binding OpenFileCommand}">
 				<Button.Content>
 					<StackPanel Orientation="Horizontal">
