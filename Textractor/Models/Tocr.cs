@@ -7,7 +7,6 @@ namespace Textractor.Models
 {
     public static class Tocr
     {
-        //static string DataPath = @"D:\code\tessdata_best";
         static string DataPath = @".\tessdata";
 
         public static string Process_Full(string fullPath)
@@ -102,20 +101,20 @@ namespace Textractor.Models
         {
             using var engine = new Engine(DataPath, Language.English, EngineMode.Default);
             using var img = TesseractOCR.Pix.Image.LoadFromFile(fullPath);
-            using var page = engine.Process(img);
+            using var result = engine.Process(img);
 
-            var result = new StringBuilder();
+            string text = string.Empty;
 
             try
             {
-                result.Append(page.Text);
+                text = result.Text;
             }
             catch (Exception ex)
             {
                 sbdotnet.Logger.Error(ex);
             }
 
-            return result.ToString();
+            return text;
         }
     }
 }

@@ -25,6 +25,8 @@ namespace Textractor.ViewModels
                 FilePickerFileTypes.Pdf
             ];
 
+        static readonly int Tab_OCR = 0;
+        static readonly int Tab_IMG = 1;
 
         #endregion Fields
         /////////////////////////////////////////////////////////
@@ -49,6 +51,9 @@ namespace Textractor.ViewModels
         [ObservableProperty]
         int tabIndex = 0;
 
+        [ObservableProperty]
+        bool isProcessing = false;
+
         #endregion Properties
         /////////////////////////////////////////////////////////
 
@@ -57,7 +62,7 @@ namespace Textractor.ViewModels
         /////////////////////////////////////////////////////////
         #region Commands
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(Canex_OpenFile))]
         public async Task OpenFile()
         {
             var toplevel = TopLevel.GetTopLevel(MainWindow.Instance);
@@ -74,26 +79,42 @@ namespace Textractor.ViewModels
             SelectedFile = files[0].Path.AbsolutePath;
         }
 
-        [RelayCommand(CanExecute = nameof(CanEx_Process_Full))]
-        private void Process_Full()
+        private bool Canex_OpenFile()
         {
-            OcrResult = Tocr.Process_Full(SelectedFile);
+            return (IsProcessing == false);
         }
 
-        private bool CanEx_Process_Full()
+        [RelayCommand(CanExecute = nameof(Canex_Process_Full))]
+        private async Task Process_Full()
         {
-            return !SelectedFile.IsNull();
+            IsProcessing = true;
+            OcrResult = await Task.Run(() => Tocr.Process_Full(SelectedFile));
+            IsProcessing = false;
         }
 
-        [RelayCommand(CanExecute = nameof(CanEx_Process_Text))]
-        private void Process_Text()
+        private bool Canex_Process_Full()
         {
-            OcrResult = Tocr.Process_Text(SelectedFile);
+            return !SelectedFile.IsNull() && !IsProcessing;
         }
 
-        private bool CanEx_Process_Text()
+        [RelayCommand(CanExecute = nameof(Canex_Process_Text))]
+        private async Task Process_Text()
         {
-            return !SelectedFile.IsNull();
+            IsProcessing = true;
+            OcrResult = await Task.Run(() => Tocr.Process_Text(SelectedFile));
+            IsProcessing = false;
+        }
+
+        private bool Canex_Process_Text()
+        {
+            return !SelectedFile.IsNull() && !IsProcessing;
+        }
+
+        private void Update_Canex()
+        {
+            OpenFileCommand.NotifyCanExecuteChanged();
+            Process_FullCommand.NotifyCanExecuteChanged();
+            Process_TextCommand.NotifyCanExecuteChanged();
         }
 
         #endregion Commands
@@ -111,8 +132,7 @@ namespace Textractor.ViewModels
             {
                 if (e.PropertyName.Equals(nameof(SelectedFile)))
                 {
-                    Process_FullCommand.NotifyCanExecuteChanged();
-                    Process_TextCommand.NotifyCanExecuteChanged();
+                    Update_Canex();
 
                     if (!SelectedFile.IsNull())
                     {
@@ -122,12 +142,17 @@ namespace Textractor.ViewModels
 
                 else if (e.PropertyName.Equals(nameof(OcrResult)))
                 {
-                    TabIndex = 0;
+                    TabIndex = Tab_OCR;
                 }
 
                 else if (e.PropertyName.Equals(nameof(SelectedImage)))
                 {
-                    TabIndex = 1;
+                    TabIndex = Tab_IMG;
+                }
+
+                else if (e.PropertyName.Equals(nameof(IsProcessing)))
+                {
+                    Update_Canex();
                 }
             }
         }

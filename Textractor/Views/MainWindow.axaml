@@ -58,8 +58,8 @@
 		
 		<StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch" Margin="10,0,10,0">
 			<TextBlock Text="File:"/>
-			<TextBox Width="500" MinHeight="24" Height="28" Text="{Binding SelectedFile}" IsReadOnly="True"/>
-			<Button Command="{Binding OpenFileCommand}">
+			<TextBox Width="500" Text="{Binding SelectedFile}" IsReadOnly="True"/>
+			<Button Command="{Binding OpenFileCommand}" IsEnabled="{Binding !IsProcessing}">
 				<Button.Content>
 					<StackPanel Orientation="Horizontal">
 						<sym:Symbol SymbolName="file_open" Width="24" Height="24" VerticalAlignment="Center"/>
