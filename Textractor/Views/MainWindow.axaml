@@ -30,6 +30,19 @@
 		<Style Selector="TextBox">
 			<Setter Property="VerticalAlignment" Value="Center"/>
 		</Style>
+		<Style Selector="Rectangle.red">
+			<Setter Property="Fill" Value="{DynamicResource SystemChromeLowColor}"/>
+			<Style.Animations>
+				<Animation Duration="0:0:1" IterationCount="INFINITE">
+					<KeyFrame Cue="0%">
+						<Setter Property="RotateTransform.Angle" Value="0.0"/>
+					</KeyFrame>
+					<KeyFrame Cue="100%">
+						<Setter Property="RotateTransform.Angle" Value="180.0"/>
+					</KeyFrame>
+				</Animation>
+			</Style.Animations>
+		</Style>
 	</Window.Styles>
 
 	<Grid>
@@ -58,7 +71,7 @@
 		
 		<StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch" Margin="10,0,10,0">
 			<TextBlock Text="File:"/>
-			<TextBox Width="500" Text="{Binding SelectedFile}" IsReadOnly="True"/>
+			<TextBox Width="500" Text="{Binding SelectedFile}" IsReadOnly="True" IsEnabled="{Binding !IsProcessing}" />
 			<Button Command="{Binding OpenFileCommand}" IsEnabled="{Binding !IsProcessing}">
 				<Button.Content>
 					<StackPanel Orientation="Horizontal">
@@ -88,7 +101,7 @@
 			</Button>
 		</StackPanel>
 
-		<TabControl Grid.Row="5" TabIndex="{Binding TabIndex, Mode=TwoWay}">
+		<TabControl Grid.Row="5" TabIndex="{Binding TabIndex, Mode=TwoWay}" ZIndex="0">
 
 			<TabItem Header="OCR Result">
 				<Border Background="White">
@@ -103,6 +116,12 @@
 			</TabItem>
 
 		</TabControl>
+
+		<StackPanel Grid.Row="5" Background="{DynamicResource SystemChromeHighColor}" ZIndex="1" IsVisible="{Binding IsProcessing}"
+					VerticalAlignment="Center" Margin="10,0,10,0">
+			<TextBlock FontSize="24" FontWeight="Bold" Text="processing" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+			<Rectangle Classes="red" Width="10" Height="100" Margin="0,20,0,20"/>
+		</StackPanel>
 
 
 	</Grid>
