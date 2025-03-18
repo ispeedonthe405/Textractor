@@ -3,7 +3,7 @@
         xmlns:vm="using:Textractor.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="450"
         xmlns:sym="using:sbavalonia.symbols"
 		x:Class="Textractor.Views.MainWindow"
         x:DataType="vm:VM_MainWindow"
@@ -43,6 +43,25 @@
 				</Animation>
 			</Style.Animations>
 		</Style>
+		<Style Selector="TabItem">
+			<Setter Property="MinHeight" Value="30"/>
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="Background" Value="{DynamicResource SystemChromeLowColor}"/>
+			<Setter Property="BorderBrush" Value="{DynamicResource SystemChromeHighColor}"/>
+			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="CornerRadius" Value="10,10,0,0"/>
+			<Setter Property="Margin" Value="1,0,1,0"/>
+		</Style>
+		<Style Selector="TabItem:selected">
+			<Setter Property="MinHeight" Value="30"/>
+			<Setter Property="Height" Value="30"/>
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="Background" Value="{DynamicResource SystemChromeLowColor}"/>
+			<Setter Property="BorderBrush" Value="{DynamicResource SystemChromeHighColor}"/>
+			<Setter Property="BorderThickness" Value="3"/>
+			<Setter Property="CornerRadius" Value="10,10,0,0"/>
+		</Style>
 	</Window.Styles>
 
 	<Grid>
@@ -70,8 +89,11 @@
 		</StackPanel>
 		
 		<StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch" Margin="10,0,10,0">
+			
 			<TextBlock Text="File:"/>
+			
 			<TextBox Width="500" Text="{Binding SelectedFile}" IsReadOnly="True" IsEnabled="{Binding !IsProcessing}" />
+			
 			<Button Command="{Binding OpenFileCommand}" IsEnabled="{Binding !IsProcessing}">
 				<Button.Content>
 					<StackPanel Orientation="Horizontal">
@@ -80,17 +102,20 @@
 					</StackPanel>
 				</Button.Content>
 			</Button>
-		</StackPanel>
 
-		<StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10" Margin="10,0,10,0">
-			<Button Command="{Binding Process_FullCommand}">
+			<Button Command="{Binding TestImage01Command}" IsEnabled="{Binding !IsProcessing}">
 				<Button.Content>
 					<StackPanel Orientation="Horizontal">
-						<sym:Symbol SymbolName="scan" Width="24" Height="24" VerticalAlignment="Center"/>
-						<TextBlock Text="Process: Full analysis" Margin="5,0,0,0" VerticalAlignment="Center"/>
+						<sym:Symbol SymbolName="file_open" Width="24" Height="24" VerticalAlignment="Center"/>
+						<TextBlock Text="Load test image" Margin="5,0,0,0" VerticalAlignment="Center"/>
 					</StackPanel>
 				</Button.Content>
 			</Button>
+	
+		</StackPanel>
+
+		<StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="10" Margin="10,0,10,0">
+			
 			<Button Command="{Binding Process_TextCommand}">
 				<Button.Content>
 					<StackPanel Orientation="Horizontal">
@@ -99,19 +124,29 @@
 					</StackPanel>
 				</Button.Content>
 			</Button>
+
+			<Button Command="{Binding Process_FullCommand}">
+				<Button.Content>
+					<StackPanel Orientation="Horizontal">
+						<sym:Symbol SymbolName="scan" Width="24" Height="24" VerticalAlignment="Center"/>
+						<TextBlock Text="Process: Full analysis" Margin="5,0,0,0" VerticalAlignment="Center"/>
+					</StackPanel>
+				</Button.Content>
+			</Button>
+			
 		</StackPanel>
 
-		<TabControl Grid.Row="5" TabIndex="{Binding TabIndex, Mode=TwoWay}" ZIndex="0">
+		<TabControl x:Name="Tabs" Grid.Row="5" SelectedIndex="{Binding TabIndex}" ZIndex="0">
 
-			<TabItem Header="OCR Result">
+			<TabItem Header="Image Source" Cursor="Hand" BorderThickness="2" BorderBrush="Gray" FontSize="18" Margin="10,0,0,0">
 				<Border Background="White">
-					<TextBox IsReadOnly="True" AcceptsReturn="True" BorderThickness="0" VerticalAlignment="Stretch" Text="{Binding OcrResult}"/>
+					<Image Source="{Binding SelectedImage}"/>
 				</Border>
 			</TabItem>
 
-			<TabItem Header="Image Source">
+			<TabItem Header="OCR Result" Cursor="Hand" BorderThickness="2" BorderBrush="Gray" FontSize="18">
 				<Border Background="White">
-					<Image Source="{Binding SelectedImage}"/>
+					<TextBox IsReadOnly="True" AcceptsReturn="True" BorderThickness="0" VerticalAlignment="Stretch" Text="{Binding OcrResult}"/>
 				</Border>
 			</TabItem>
 
