@@ -7,6 +7,7 @@ using sbdotnet;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Textractor.Models;
 using Textractor.Views;
@@ -21,8 +22,8 @@ namespace Textractor.ViewModels
 
         readonly List<FilePickerFileType> FileTypeFilters =
             [
-                FilePickerFileTypes.ImageAll,
-                FilePickerFileTypes.Pdf
+            FilePickerFileTypes.ImagePng,
+            FilePickerFileTypes.ImageJpg
             ];
 
         static readonly int Tab_OCR = 0;
@@ -37,22 +38,22 @@ namespace Textractor.ViewModels
         #region Properties
 
         [ObservableProperty]
-        string ocrResult = string.Empty;
+        string _OcrResult = string.Empty;
 
         [ObservableProperty]
-        string ocrStatus = string.Empty;
+        string _OcrStatus = string.Empty;
 
         [ObservableProperty]
-        string selectedFile = string.Empty;
+        string _SelectedFile = string.Empty;
 
         [ObservableProperty]
-        Bitmap? selectedImage;
+        Bitmap? _SelectedImage;
 
         [ObservableProperty]
-        int tabIndex = 0;
+        int _TabIndex = 0;
 
         [ObservableProperty]
-        bool isProcessing = false;
+        bool _IsProcessing = false;
 
         #endregion Properties
         /////////////////////////////////////////////////////////
@@ -61,6 +62,11 @@ namespace Textractor.ViewModels
 
         /////////////////////////////////////////////////////////
         #region Commands
+
+        private bool Canex_OpenFile()
+        {
+            return (IsProcessing == false);
+        }
 
         [RelayCommand(CanExecute = nameof(Canex_OpenFile))]
         public async Task OpenFile()
@@ -77,12 +83,26 @@ namespace Textractor.ViewModels
                 return;
             }
             SelectedFile = files[0].Path.AbsolutePath;
+            TabIndex = 0;
         }
 
-        private bool Canex_OpenFile()
+        [RelayCommand(CanExecute = nameof(Canex_OpenFile))]
+        public void TestImage01()
         {
-            return (IsProcessing == false);
+            string appdata = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
+            SelectedFile = Path.Combine(appdata, "TestPic01.jpg");
+            TabIndex = 0;
         }
+
+        [RelayCommand(CanExecute = nameof(Canex_OpenFile))]
+        public void TestImage02()
+        {
+            string appdata = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
+            SelectedFile = Path.Combine(appdata, "TestPic02.jpg");
+            TabIndex = 0;
+        }
+
+
 
         [RelayCommand(CanExecute = nameof(Canex_Process_Full))]
         private async Task Process_Full()
@@ -90,6 +110,7 @@ namespace Textractor.ViewModels
             IsProcessing = true;
             OcrResult = await Task.Run(() => Tocr.Process_Full(SelectedFile));
             IsProcessing = false;
+            TabIndex = 1;
         }
 
         private bool Canex_Process_Full()
@@ -103,6 +124,7 @@ namespace Textractor.ViewModels
             IsProcessing = true;
             OcrResult = await Task.Run(() => Tocr.Process_Text(SelectedFile));
             IsProcessing = false;
+            TabIndex = 1;
         }
 
         private bool Canex_Process_Text()
