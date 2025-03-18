@@ -9,6 +9,7 @@ namespace Textractor.Views
         public MainWindow()
         {
             Instance = this;
+            DataContext = new ViewModels.VM_MainWindow();
             InitializeComponent();
         }
     }
